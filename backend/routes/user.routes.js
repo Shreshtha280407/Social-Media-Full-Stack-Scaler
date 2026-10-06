@@ -1,17 +1,13 @@
 import express from "express"
-import {registerUser} from "../controllers/user.controllers.js"
+import {getUser, loginUser, registerUser} from "../controllers/user.controllers.js"
+import isAuthenticated from "../middlewares/auth.middleWare.js"
 
 const userRoutes  = express.Router()
 
 
-
-//register user
-
-userRoutes.post('/register', registerUser)
-
-
-//login user
-
+userRoutes.post('/register', registerUser)//register user
+userRoutes.post('/login', loginUser) //login user
+userRoutes.get('/me', isAuthenticated, getUser)
 
 
 

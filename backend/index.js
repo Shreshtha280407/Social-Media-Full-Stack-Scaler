@@ -1,6 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
+import cookieParser from "cookieParser"
 
 
 import userRoutes from "./routes/user.routes.js"
@@ -22,6 +23,7 @@ mongoose.connect(process.env.dburl).then(()=>{
 
 
 app.use(express.json())
+app.use(cookieParser())
 app.use('/users', userRoutes)
 
 app.listen(port, ()=>{
