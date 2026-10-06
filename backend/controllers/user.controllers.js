@@ -1,11 +1,10 @@
-import { response } from "express"
 import User from "../models/user.model.js"
 import bcrypt from "bcrypt"
 import genToken from "../utils/genToken.js"
 
 const cookieOptions = {
     httpOnly : true,
-    //avois xas and csrf attacks 
+    //avoids xss and csrf attacks 
 }
 
 const registerUser = async(req, res)=>{
@@ -49,13 +48,11 @@ const registerUser = async(req, res)=>{
         res.status(200).json({newUser})
         
     }
-     catch{
-        res.status(500).json({message: "internal server crashed"}, error);
+     catch (error) {
+        res.status(500).json({message: "internal server crashed", error: error.message});
     }
 
 }
-
-
 
 
 const loginUser = async(req, res)=>{
@@ -67,7 +64,7 @@ const loginUser = async(req, res)=>{
             return res.status(422).json({message: "All fields are required"})
         }
 
-        const userExists = User.findOne({email})
+        const userExists = await User.findOne({email})
 
         if(!userExists){
             return res.status(404).json({message: "User not found"})
@@ -83,10 +80,10 @@ const loginUser = async(req, res)=>{
         const token = genToken(userExists._id)
         res.cookie( "token", token, cookieOptions)
 
-        res.status(200).json(newUser)
+        res.status(200).json({user: userExists})
     }
-     catch{
-        res.status(500).json({message: "internal server crashed"}, error);
+     catch (error) {
+        res.status(500).json({message: "internal server crashed", error: error.message});
     }
 
 }
